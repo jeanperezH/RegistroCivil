@@ -51,17 +51,7 @@ class NacimientoController extends Controller
             $nacimientos->apellidos=$request->apellidos;
             $nacimientos->nombres=$request->nombres;
             $nacimientos->anexo=$request->anexo;
-            if ($request->hasFile('acta')) {
-                $path = $request->file('acta')->store('fileupload');
-                $fileinfo = $request->file('acta');
-                
-                $request->merge([
-                    //'acta'              => $path,
-                    'acta' => $fileinfo->getClientOriginalName(),
-                ]);
-            }
-            $nacimientos->acta=$request->acta;
-            // $request;
+            $nacimientos->acta=$request->file('acta')->store('public');
             $nacimientos->save();
         } catch (\Throwable $th) {
             throw $th;
@@ -74,7 +64,7 @@ class NacimientoController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         
-        $encargados = Encargado::findOrFail($request->id);
+        $nacimientos = Nacimiento::findOrFail($request->id);
         
         $nacimientos->libro=$request->libro;
         $nacimientos->folio=$request->folio;
